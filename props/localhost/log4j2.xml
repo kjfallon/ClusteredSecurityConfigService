@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="OFF">
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+        <File name="ClusteredSecurityConfigServiceLogFile" fileName="/var/log/ClusteredSecurityConfigService/ClusteredSecurityConfigService.log">
+            <PatternLayout>
+                <pattern>%d %p [%t] %c{1.} %m%n</pattern>
+            </PatternLayout>
+        </File></Appenders>
+
+    <Loggers>
+        <Logger name="edu.syr.eecs.cis.cscs" level="debug" additivity="false">
+            <AppenderRef ref="ClusteredSecurityConfigServiceLogFile" />
+        </Logger>
+
+        <Logger name="org.springframework" level="info" additivity="false">
+            <AppenderRef ref="ClusteredSecurityConfigServiceLogFile" />
+        </Logger>
+
+        <Root level="info">
+            <appender-ref ref="Console" />
+        </Root>
+    </Loggers>
+
+</Configuration>

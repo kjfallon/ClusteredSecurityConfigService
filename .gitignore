@@ -1,0 +1,27 @@
+
+# Maven
+.mvn/
+
+# eclipse project files
+.project
+.classpath
+.settings/
+tmp/
+
+# intellij project files
+.idea/
+*.iml
+*.iws
+out
+gen
+
+# maven
+log/
+target/
+
+# osx
+.DS_Store
+
+# spring
+.springBeans
+
