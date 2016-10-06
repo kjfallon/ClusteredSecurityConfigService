@@ -52,7 +52,7 @@ start() {
     echo -n $"Starting $PROJECT_NAME: "
 
     cd "$SPRINGBOOTAPP_HOME"
-    su $SERVICE_USER -c "nohup $SPRINGBOOTAPP_JAVA -Xmx1G -cp $CLASS_PATH org.springframework.boot.loader.JarLauncher >> \"$LOG\" 2>&1 &"
+    su $SERVICE_USER -c "nohup $SPRINGBOOTAPP_JAVA -Xmx128M -cp $CLASS_PATH org.springframework.boot.loader.JarLauncher >> \"$LOG\" 2>&1 &"
 
     #while { pid_of_spring_boot > /dev/null ; } &&
     #    ! { tail --lines=+$cnt "$LOG" | grep -q ' Started \S+ in' ; } ; do
