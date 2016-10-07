@@ -1,6 +1,8 @@
 
-# Maven
+# maven
 .mvn/
+log/
+target/
 
 # eclipse project files
 .project
@@ -14,10 +16,6 @@ tmp/
 *.iws
 out
 gen
-
-# maven
-log/
-target/
 
 # osx
 .DS_Store
