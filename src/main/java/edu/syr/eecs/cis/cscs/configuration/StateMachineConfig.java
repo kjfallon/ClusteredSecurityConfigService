@@ -57,7 +57,7 @@ public class StateMachineConfig {
     @Bean
     CopycatServer stateMachineServer() throws Exception {
 
-        logger.info("Starting init of state machine...");
+        logger.info("Starting init of state machine server...");
         List<String> seedHostList =
                 Arrays.asList(encryptedProperties.getProperty("stateMachineSeedHostList").split("\\s*,\\s*"));
 
@@ -108,7 +108,7 @@ public class StateMachineConfig {
 
         server.bootstrap(members).join();
 
-        logger.info("Completed init of state machine.");
+        logger.info("Completed init of state machine server.");
         return server;
     }
 
