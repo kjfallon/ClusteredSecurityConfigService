@@ -15,18 +15,16 @@ package edu.syr.eecs.cis.cscs.entities.statemachine;
  * limitations under the License
  */
 
-        import io.atomix.copycat.Query;
+        import io.atomix.copycat.Command;
 
 /**
- * Value get query.
+ * Value delete command.
  *
  * @author <a href="http://github.com/kuujo>Jordan Halterman</a>
  */
-public class GetQuery implements Query<Object> {
-
+public class ValueDeleteCommand implements Command<Void> {
     @Override
-    public ConsistencyLevel consistency() {
-        return ConsistencyLevel.LINEARIZABLE_LEASE;
+    public CompactionMode compaction() {
+        return CompactionMode.TOMBSTONE;
     }
-
 }

@@ -1,9 +1,7 @@
 package edu.syr.eecs.cis.cscs.configuration;
 
 
-import edu.syr.eecs.cis.cscs.entities.statemachine.DeleteCommand;
-import edu.syr.eecs.cis.cscs.entities.statemachine.GetQuery;
-import edu.syr.eecs.cis.cscs.entities.statemachine.SetCommand;
+import edu.syr.eecs.cis.cscs.entities.statemachine.*;
 import io.atomix.catalyst.transport.Address;
 import io.atomix.catalyst.transport.netty.NettyTransport;
 import io.atomix.copycat.client.ConnectionStrategies;
@@ -34,7 +32,7 @@ public class StateMachineClientConfig {
     @Autowired
     Properties encryptedProperties;
 
-@Bean
+    @Bean
     CopycatClient stateMachineClient() {
 
     logger.info("Starting init of state machine client...");
@@ -42,7 +40,7 @@ public class StateMachineClientConfig {
     // Specify member servers the client will connect to.
     List<Address> members = new ArrayList<>();
     List<String> clientMemberList = new ArrayList<>();
-    // if a list of servers are specified in the config then use them, otherwise use the local server instance and port 5000
+    // if a list of servers is specified in the config then use them, otherwise use the local server instance on port 5000
     if (StringUtils.isNotEmpty(encryptedProperties.getProperty("stateMachineClientMemberList"))) {
         clientMemberList =
                 Arrays.asList(encryptedProperties.getProperty("stateMachineClientMemberList").split("\\s*,\\s*"));
@@ -69,9 +67,8 @@ public class StateMachineClientConfig {
             .withServerSelectionStrategy(ServerSelectionStrategies.LEADER)
             .build();
 
-    client.serializer().register(SetCommand.class, 1);
-    client.serializer().register(GetQuery.class, 2);
-    client.serializer().register(DeleteCommand.class, 3);
+    client.serializer().register(MapPutCommand.class);
+    client.serializer().register(MapGetQuery.class);
 
     client.connect(members).join();
 

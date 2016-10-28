@@ -15,9 +15,9 @@ package edu.syr.eecs.cis.cscs.entities.statemachine;
  * limitations under the License
  */
 
-        import io.atomix.copycat.server.Commit;
-        import io.atomix.copycat.server.StateMachine;
-        import io.atomix.copycat.server.StateMachineExecutor;
+import io.atomix.copycat.server.Commit;
+import io.atomix.copycat.server.StateMachine;
+import io.atomix.copycat.server.StateMachineExecutor;
 
 /**
  * Value state machine.
@@ -26,21 +26,21 @@ package edu.syr.eecs.cis.cscs.entities.statemachine;
  */
 
 public class ValueStateMachine extends StateMachine {
-    private Commit<SetCommand> value;
+    private Commit<ValueSetCommand> value;
 
     @Override
     protected void configure(StateMachineExecutor executor) {
-        executor.register(SetCommand.class, this::set);
-        executor.register(GetQuery.class, this::get);
-        executor.register(DeleteCommand.class, this::delete);
+        executor.register(ValueSetCommand.class, this::set);
+        executor.register(ValueGetQuery.class, this::get);
+        executor.register(ValueDeleteCommand.class, this::delete);
     }
 
     /**
      * Sets the value.
      */
-    private Object set(Commit<SetCommand> commit) {
+    private Object set(Commit<ValueSetCommand> commit) {
         try {
-            Commit<SetCommand> previous = value;
+            Commit<ValueSetCommand> previous = value;
             value = commit;
             if (previous != null) {
                 Object result = previous.operation().value();
@@ -57,7 +57,7 @@ public class ValueStateMachine extends StateMachine {
     /**
      * Gets the value.
      */
-    private Object get(Commit<GetQuery> commit) {
+    private Object get(Commit<ValueGetQuery> commit) {
         try {
             return value != null ? value.operation().value() : null;
         } finally {
@@ -68,7 +68,7 @@ public class ValueStateMachine extends StateMachine {
     /**
      * Deletes the value.
      */
-    private void delete(Commit<DeleteCommand> commit) {
+    private void delete(Commit<ValueDeleteCommand> commit) {
         try {
             if (value != null) {
                 value.close();

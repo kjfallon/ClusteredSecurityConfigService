@@ -15,34 +15,31 @@ package edu.syr.eecs.cis.cscs.configuration;
  * limitations under the License
  */
 
-        import edu.syr.eecs.cis.cscs.entities.statemachine.DeleteCommand;
-        import edu.syr.eecs.cis.cscs.entities.statemachine.GetQuery;
-        import edu.syr.eecs.cis.cscs.entities.statemachine.SetCommand;
-        import edu.syr.eecs.cis.cscs.entities.statemachine.ValueStateMachine;
+import edu.syr.eecs.cis.cscs.entities.statemachine.*;
 
-        import io.atomix.catalyst.transport.Address;
-        import io.atomix.catalyst.transport.netty.NettyTransport;
-        import io.atomix.copycat.server.CopycatServer;
-        import io.atomix.copycat.server.storage.Storage;
-        import org.apache.commons.lang3.StringUtils;
-        import org.apache.logging.log4j.LogManager;
-        import org.apache.logging.log4j.Logger;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.context.annotation.Bean;
-        import org.springframework.context.annotation.Configuration;
+import io.atomix.catalyst.transport.Address;
+import io.atomix.catalyst.transport.netty.NettyTransport;
+import io.atomix.copycat.server.CopycatServer;
+import io.atomix.copycat.server.storage.Storage;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-        import java.net.InetAddress;
-        import java.net.UnknownHostException;
-        import java.time.Duration;
-        import java.util.ArrayList;
-        import java.util.Arrays;
-        import java.util.List;
-        import java.util.Properties;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
 
 /**
- * Value state machine example. Expects at least 2 arguments:
  *
  * @author <a href="http://github.com/kuujo>Jordan Halterman</a>
+ * @author <a href="http://github.com/kjfallon>Kelly Fallon</a>
  */
 
 @Configuration
@@ -92,7 +89,7 @@ public class StateMachineConfig {
 
         logger.info("Binding CopycatServer to: " + bindIP + ":" + bindPort);
         CopycatServer server = CopycatServer.builder(bindAddress)
-                .withStateMachine(ValueStateMachine::new)
+                .withStateMachine(MapStateMachine::new)
                 .withTransport(new NettyTransport())
                 .withStorage(Storage.builder()
                         .withDirectory(encryptedProperties.getProperty("stateMachineFileStoragePath"))
@@ -102,9 +99,8 @@ public class StateMachineConfig {
                         .build())
                 .build();
 
-        server.serializer().register(SetCommand.class, 1);
-        server.serializer().register(GetQuery.class, 2);
-        server.serializer().register(DeleteCommand.class, 3);
+        server.serializer().register(MapPutCommand.class);
+        server.serializer().register(MapGetQuery.class);
 
         server.bootstrap(members).join();
 

@@ -15,30 +15,18 @@ package edu.syr.eecs.cis.cscs.entities.statemachine;
  * limitations under the License
  */
 
- import io.atomix.copycat.Command;
+import io.atomix.copycat.Query;
 
 /**
- * Value set command.
+ * Value get query.
  *
  * @author <a href="http://github.com/kuujo>Jordan Halterman</a>
  */
-public class SetCommand implements Command<Object> {
-    private final Object value;
-
-    public SetCommand(Object value) {
-        this.value = value;
-    }
-
-    /**
-     * Returns the value.
-     */
-    public Object value() {
-        return value;
-    }
+public class ValueGetQuery implements Query<Object> {
 
     @Override
-    public CompactionMode compaction() {
-        return CompactionMode.QUORUM;
+    public ConsistencyLevel consistency() {
+        return ConsistencyLevel.LINEARIZABLE_LEASE;
     }
 
 }

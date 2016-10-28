@@ -15,6 +15,9 @@ public class YumConfigService {
     @Autowired
     Properties encryptedProperties;
 
+    @Autowired
+    StateMachineClientOperationsService clientOps;
+
     public boolean processYumConfig() {
         return true;
 

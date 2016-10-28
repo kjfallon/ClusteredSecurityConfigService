@@ -15,16 +15,30 @@ package edu.syr.eecs.cis.cscs.entities.statemachine;
  * limitations under the License
  */
 
-        import io.atomix.copycat.Command;
+ import io.atomix.copycat.Command;
 
 /**
- * Value delete command.
+ * Value set command.
  *
  * @author <a href="http://github.com/kuujo>Jordan Halterman</a>
  */
-public class DeleteCommand implements Command<Void> {
+public class ValueSetCommand implements Command<Object> {
+    private final Object value;
+
+    public ValueSetCommand(Object value) {
+        this.value = value;
+    }
+
+    /**
+     * Returns the value.
+     */
+    public Object value() {
+        return value;
+    }
+
     @Override
     public CompactionMode compaction() {
-        return CompactionMode.TOMBSTONE;
+        return CompactionMode.QUORUM;
     }
+
 }

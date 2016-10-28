@@ -1,5 +1,6 @@
 package edu.syr.eecs.cis.cscs.configuration;
 
+import edu.syr.eecs.cis.cscs.services.StateMachineClientOperationsService;
 import edu.syr.eecs.cis.cscs.services.YumConfigService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +19,6 @@ public class SchedulerConfig {
     @Autowired
     YumConfigService yum;
 
-
     SchedulerConfig() {
         logger.info("Loaded Scheduler config");
     }
@@ -28,7 +28,7 @@ public class SchedulerConfig {
     public void task1 () {
 
 
-        logger.info("placeholer @5min task complete");
+        logger.info("placeholder @5min task complete");
 
     }
 
