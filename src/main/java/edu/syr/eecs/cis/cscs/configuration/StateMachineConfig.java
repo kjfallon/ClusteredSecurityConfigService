@@ -71,7 +71,7 @@ public class StateMachineConfig {
             e.printStackTrace();
         }
 
-        //if host and port are specified in property file then use them
+        // if host and port are specified in property file then use them
         if (StringUtils.isNotEmpty(encryptedProperties.getProperty("stateMachineBindHost"))) {
             bindIP = encryptedProperties.getProperty("stateMachineBindHost");
         }
