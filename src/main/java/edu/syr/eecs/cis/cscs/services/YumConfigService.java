@@ -1,12 +1,17 @@
 package edu.syr.eecs.cis.cscs.services;
 
 import edu.syr.eecs.cis.cscs.entities.YumDomain;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,6 +77,65 @@ public class YumConfigService {
             }
         }
 
+        writeRepoFiles(version, domainList);
+
         return true;
     }
+
+    private boolean writeRepoFiles(String version, List<YumDomain> domainList) {
+
+        String repoDirPath = "";
+        // for demo one supported distribution
+        if (version.equalsIgnoreCase("centos7")) {
+            repoDirPath = "/etc/yum.repos.d/";
+        }
+        else {
+            logger.error("Unsupported version for file system updates");
+            return false;
+        }
+        // For each domain create the yum repo file if it does not exist, otherwise update it
+        for (YumDomain domain : domainList) {
+
+            String filepath = repoDirPath + "CSCS-Managed-" + domain.getName() + ".repo";
+            File file = new File(filepath);
+            String content = null;
+            if (file.exists()) {
+                // update file
+                try {
+                    content = IOUtils.toString(new FileInputStream(filepath), "UTF-8");
+                    content = content.replaceAll("name=.*", "name=" + domain.getName());
+                    content = content.replaceAll("baseurl=.*", "baseurl=" + domain.getBaseUrl());
+                    content = content.replaceAll("enabled=.*", "enabled=" + domain.getEnabled());
+                    IOUtils.write(content, new FileOutputStream(filepath), "UTF-8");
+                    logger.debug("Updated domain " + domain.getName() + " repo file: " + filepath);
+                } catch (IOException e) {
+                    logger.error("error Updating domain " + domain.getName() + " repo file: " + filepath);
+                    e.printStackTrace();
+
+                }
+
+            }
+            else {
+                // create file
+                content = "# Managed repo for domain " + domain.getName() + "\n";
+                content = content + "\n";
+                content = content + "[" + domain.getName() + "]\n";
+                content = content + "\n";
+                content = content + "name=" + domain.getName() + "\n";
+                content = content + "baseurl=" + domain.getBaseUrl() + "\n";
+                content = content + "enabled=" + domain.getEnabled() + "\n";
+                try {
+                    IOUtils.write(content, new FileOutputStream(filepath), "UTF-8");
+                    logger.debug("Created domain " + domain.getName() + " repo file: " + filepath);
+                } catch (IOException e) {
+                    logger.error("error Creating domain " + domain.getName() + " repo file: " + filepath);
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+        return true;
+    }
+
 }
