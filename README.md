@@ -1,10 +1,10 @@
 ###Clustered Security Configuration Service
 
-This is a proof of concept service that polls, validates, and applies security configuration metadata from a distrubuted consensus data-store and applies it to local OS services.  It is a demonstration of potential OS features for IoT native operating system as part of a class project for the Syracuse University class CIS657 Principles of Operating Systems.
+This is a proof of concept service that polls, validates, and applies security configuration metadata from a distrubuted consensus data-store and applies it to local OS services.  It is a demonstration of potential OS features for IoT native operating systems as part of a class project for the Syracuse University class CIS657 Principles of Operating Systems.
 
 This is a Linux system service with a RHEL/CentOS 7 compatible init script.  The service is a Java Spring Boot (https://projects.spring.io/spring-boot/) application.  The service implements the Copycat (http://atomix.io/copycat/) server process providing a fault-tolerant state machine replication framework using the Raft consensus algorithm.
 
-For our demonstration we deployed this application to a small number of EC2 hosts to simulate IoT devices.  Using a scheduler every five minutes the services pools the distributed data store for security configuration updates.  I this demo the service updates Yum repository configuration used by the system to perform software updates.  The value of each KVP is expected to be SHA256withRSA signed and the services validates the signature with a the public key of the trusted signer.
+For our demonstration we deployed this application to a small number of EC2 hosts to simulate IoT devices.  Every five minutes the application's scheduler executes the YumConfigService to poll the distributed data store for security configuration updates.  In this demo the service updates Yum repository configuration used by the system to perform software updates.  The value of each KVP is expected to be SHA256withRSA signed and the service validates the signature with the public key of the trusted signer.
 
 Log file excerpt of the YumConfigService executing
 ---------------------------------------------------
