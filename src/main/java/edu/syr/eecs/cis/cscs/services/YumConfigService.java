@@ -8,14 +8,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
 @Service
 public class YumConfigService {
@@ -59,17 +53,112 @@ public class YumConfigService {
             String nameKey = domainName + ".yum." + version + ".repo.name";
             String baseUrlKey = domainName + ".yum." + version + ".repo.baseurl";
             String enabledKey = domainName + ".yum." + version + ".repo.enabled";
+
+            // Start processing the name key
             logger.debug("Reading key: " + nameKey);
-            domain.setName(clientOps.readKey(nameKey));
+            String nameDataAndSignatureTuple = clientOps.readKey(nameKey);
+            String nameValueInBase64 = "";
+            String nameSignatureInBase64 = "";
+            List<String> nameDataArray = Arrays.asList(nameDataAndSignatureTuple.split(","));
+            if (nameDataArray.size() == 2) {
+                nameValueInBase64 = nameDataArray.get(0);
+                nameSignatureInBase64 = nameDataArray.get(1);
+            }
+            else {
+                logger.error("The value of the key does not look like a comma separated tuple with two values");
+            }
+            byte[] nameValueInBytes = Base64.getDecoder().decode(nameValueInBase64);
+            String nameValue = "";
+            try {
+                nameValue = new String(nameValueInBytes, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            boolean nameSignatureIsValid = false;
+            try {
+                nameSignatureIsValid = Crypto.verify(nameValue,
+                        nameSignatureInBase64,
+                        Crypto.getPublicKey(encryptedProperties.getProperty("pathToSignatureValidationPublicKey")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            logger.debug("signature validation of nameKey data is: " + nameSignatureIsValid);
+            domain.setName(nameValue);
+            // End processing the name key
+
+            // Start processing the baseUrl key
             logger.debug("Reading key: " + baseUrlKey);
-            domain.setBaseUrl(clientOps.readKey(baseUrlKey));
+            String baseUrlDataAndSignatureTuple = clientOps.readKey(baseUrlKey);
+            String baseUrlValueInBase64 = "";
+            String baseUrlSignatureInBase64 = "";
+            List<String> baseUrlDataArray = Arrays.asList(baseUrlDataAndSignatureTuple.split(","));
+            if (baseUrlDataArray.size() == 2) {
+                baseUrlValueInBase64 = baseUrlDataArray.get(0);
+                baseUrlSignatureInBase64 = baseUrlDataArray.get(1);
+            }
+            else {
+                logger.error("The value of the key does not look like a comma separated tuple with two values");
+            }
+            byte[] baseUrlValueInBytes = Base64.getDecoder().decode(baseUrlValueInBase64);
+            String baseUrlValue = "";
+            try {
+                baseUrlValue = new String(baseUrlValueInBytes, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            boolean baseUrlSignatureIsValid = false;
+            try {
+                baseUrlSignatureIsValid = Crypto.verify(baseUrlValue,
+                        baseUrlSignatureInBase64,
+                        Crypto.getPublicKey(encryptedProperties.getProperty("pathToSignatureValidationPublicKey")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            logger.debug("signature validation of baseUrlKey data is: " + baseUrlSignatureIsValid);
+            domain.setBaseUrl(baseUrlValue);
+            // End processing the baseUrl key
+
+            // Start processing the enabled key
             logger.debug("Reading key: " + enabledKey);
-            domain.setEnabled(clientOps.readKey(enabledKey));
+            String enabledDataAndSignatureTuple = clientOps.readKey(enabledKey);
+            String enabledValueInBase64 = "";
+            String enabledSignatureInBase64 = "";
+            List<String> enabledDataArray = Arrays.asList(enabledDataAndSignatureTuple.split(","));
+            if (enabledDataArray.size() == 2) {
+                enabledValueInBase64 = enabledDataArray.get(0);
+                enabledSignatureInBase64 = enabledDataArray.get(1);
+            }
+            else {
+                logger.error("The value of the key does not look like a comma separated tuple with two values");
+            }
+            byte[] enabledValueInBytes = Base64.getDecoder().decode(enabledValueInBase64);
+            String enabledValue = "";
+            try {
+                enabledValue = new String(enabledValueInBytes, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            boolean enabledSignatureIsValid = false;
+            try {
+                enabledSignatureIsValid = Crypto.verify(enabledValue,
+                        enabledSignatureInBase64,
+                        Crypto.getPublicKey(encryptedProperties.getProperty("pathToSignatureValidationPublicKey")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            logger.debug("signature validation of enabledKey data is: " + enabledSignatureIsValid);
+            domain.setEnabled(enabledValue);
+            // End processing the enabled key
+
             logger.debug("Domain " + domainName + " name: " + domain.getName());
             logger.debug("Domain " + domainName + " base url: " + domain.getBaseUrl());
             logger.debug("Domain " + domainName + " enabled: " + domain.getEnabled());
-            if (StringUtils.isNotEmpty(domain.getName()) && StringUtils.isNotEmpty(domain.getBaseUrl()) &&
-                    StringUtils.isNotEmpty(domain.getEnabled())) {
+            if (StringUtils.isNotEmpty(domain.getName())
+                    && StringUtils.isNotEmpty(domain.getBaseUrl())
+                    && StringUtils.isNotEmpty(domain.getEnabled())
+                    && nameSignatureIsValid
+                    && baseUrlSignatureIsValid
+                    && enabledSignatureIsValid) {
                 domainList.add(domain);
             }
             else {

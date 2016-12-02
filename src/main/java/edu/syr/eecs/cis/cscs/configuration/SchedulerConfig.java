@@ -23,18 +23,7 @@ public class SchedulerConfig {
         logger.info("Loaded Scheduler config");
     }
 
-    // scheduled to run every 5 minutes
     @Scheduled(cron="0 */5 * * * ?")
-    public void task1 () {
-
-
-        logger.info("placeholder @5min task complete");
-
-    }
-
-    // delay measured in milliseconds (1000 is 1 second)
-    // 300,000 == 5min
-    @Scheduled(fixedDelay=300000)
     public void processClusteredSecurityConfigMetadata() {
 
         logger.info("Scheduled task processClusteredSecurityConfigMetadata starting.");

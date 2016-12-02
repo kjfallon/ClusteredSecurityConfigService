@@ -90,7 +90,10 @@ public class StateMachineConfig {
         logger.info("Binding CopycatServer to: " + bindIP + ":" + bindPort);
         CopycatServer server = CopycatServer.builder(bindAddress)
                 .withStateMachine(MapStateMachine::new)
-                .withTransport(new NettyTransport())
+                .withTransport(NettyTransport.builder()
+                        .withThreads(4)
+                        .withAcceptBacklog(1024)
+                        .build())
                 .withStorage(Storage.builder()
                         .withDirectory(encryptedProperties.getProperty("stateMachineFileStoragePath"))
                         .withMaxSegmentSize(1024 * 1024 * 32)
