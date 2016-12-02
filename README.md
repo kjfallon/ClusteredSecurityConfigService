@@ -6,6 +6,8 @@ This is a Linux system service with a RHEL/CentOS 7 compatible init script.  The
 
 For our demonstration we deployed this application to a small number of EC2 hosts to simulate IoT devices.  Every five minutes the application's scheduler executes the YumConfigService to poll the distributed data store for security configuration updates.  In this demo the service updates Yum repository configuration used by the system to perform software updates.  The value of each KVP is expected to be SHA256withRSA signed and the service validates the signature with the public key of the trusted signer.
 
+Signed keys may be generated and submitted to the cluster using the cscs-admin-utility (https://github.com/kjfallon/cscs-admin-utility)
+
 Log file excerpt of the YumConfigService executing
 ---------------------------------------------------
 
