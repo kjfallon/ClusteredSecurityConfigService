@@ -1,4 +1,4 @@
-###Clustered Security Configuration Service
+# Clustered Security Configuration Service
 
 This is a proof of concept service that polls, validates, and applies security configuration metadata from a distrubuted consensus data-store and applies it to local OS services.  It is a demonstration of potential OS features for IoT native operating systems as part of a class project for the Syracuse University class CIS657 Principles of Operating Systems.
 
@@ -10,7 +10,7 @@ Signed keys may be generated and submitted to the cluster using the cscs-admin-u
 
 Log file excerpt of the YumConfigService executing
 ---------------------------------------------------
-
+```
 2016-12-02 17:25:00,009 INFO [pool-4-thread-1] e.s.e.c.c.c.SchedulerConfig Scheduled task processClusteredSecurityConfigMetadata starting.  
 2016-12-02 17:25:00,009 INFO [pool-4-thread-1] e.s.e.c.c.c.SchedulerConfig Starting to apply Yum configuration  
 2016-12-02 17:25:00,010 DEBUG [pool-4-thread-1] e.s.e.c.c.s.YumConfigService This node is a member of 1 config domains  
@@ -31,4 +31,5 @@ Log file excerpt of the YumConfigService executing
 2016-12-02 17:25:00,108 INFO [pool-4-thread-1] e.s.e.c.c.c.SchedulerConfig result of processYumConfig: true  
 2016-12-02 17:25:00,108 INFO [pool-4-thread-1] e.s.e.c.c.c.SchedulerConfig Completed applying Yum configuration  
 2016-12-02 17:25:00,109 INFO [pool-4-thread-1] e.s.e.c.c.c.SchedulerConfig Scheduled task processClusteredSecurityConfigMetadata execution time: 0.1 seconds (0.0min)  
-2016-12-02 17:25:00,109 INFO [pool-4-thread-1] e.s.e.c.c.c.SchedulerConfig Scheduled task processClusteredSecurityConfigMetadata complete.  Next run will be 5 minutes from this timestamp  
+2016-12-02 17:25:00,109 INFO [pool-4-thread-1] e.s.e.c.c.c.SchedulerConfig Scheduled task processClusteredSecurityConfigMetadata complete.  Next run will be 5 minutes from this timestamp
+```
